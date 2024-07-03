@@ -1,0 +1,62 @@
+package stepping_ston;
+
+public class TransportProblemSolver {
+    public static void main(String[] args) {
+        // Étape 1 : Initialisation
+        int[][] costs = {
+            {2, 3, 1},
+            {5, 4, 8},
+            {7, 2, 6}
+        };
+
+        int[] supply = {20, 30, 50};
+        int[] demand = {30, 40, 30};
+
+        // Étape 2 : Calcul des coûts réduits
+        double[] reducedRowCosts = calculateReducedCosts(costs, true);
+        double[] reducedColCosts = calculateReducedCosts(costs, false);
+
+        // Étape 3 : Affichage des coûts réduits
+        System.out.println("Coûts Réduits (Lignes) : ");
+        printArray(reducedRowCosts);
+
+        System.out.println("Coûts Réduits (Colonnes) : ");
+        printArray(reducedColCosts);
+    }
+
+    // Fonction pour calculer les coûts réduits
+    private static double[] calculateReducedCosts(int[][] costs, boolean isRow) {
+        int rowCount = costs.length;
+        int colCount = costs[0].length;
+        double[] reducedCosts = new double[isRow ? rowCount : colCount];
+
+        for (int i = 0; i < (isRow ? rowCount : colCount); i++) {
+            double minCost = Double.POSITIVE_INFINITY;
+            for (int j = 0; j < (isRow ? colCount : rowCount); j++) {
+                if (isRow) {
+                    minCost = Math.min(minCost, costs[i][j]);
+                } else {
+                    minCost = Math.min(minCost, costs[j][i]);
+                }
+            }
+
+            for (int j = 0; j < (isRow ? colCount : rowCount); j++) {
+                if (isRow) {
+                    reducedCosts[i] += costs[i][j] - minCost;
+                } else {
+                    reducedCosts[i] += costs[j][i] - minCost;
+                }
+            }
+        }
+
+        return reducedCosts;
+    }
+
+    // Fonction utilitaire pour afficher un tableau
+    private static void printArray(double[] array) {
+        for (double value : array) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+    }
+}
